@@ -12,11 +12,14 @@ repos:
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix]
       - id: ruff-format
-  - id: sqlfluff-lint
-    name: sqlfluff-lint
-    entry: sqlfluff lint
-    language: python
-    description: "Lints sql files with `SQLFluff`"
-    types: [sql]
-    require_serial: true
-    additional_dependencies: []
+  - repo: https://github.com/sqlfluff/sqlfluff
+    rev: 3.4.2
+    hooks:
+      - id: sqlfluff-lint
+        name: sqlfluff-lint
+        entry: sqlfluff lint
+        language: python
+        description: "Lints sql files with `SQLFluff`"
+        types: [sql]
+        require_serial: true
+        additional_dependencies : ['dbt-postgres', 'sqlfluff-templater-dbt']
