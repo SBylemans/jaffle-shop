@@ -14,4 +14,5 @@ COPY dbt_project.yml /usr/app/dbt_project.yml
 RUN pip install dbt-core dbt-postgres
 RUN dbt deps
 
+
 CMD /bin/bash -c "dbt seed --full-refresh --vars '{\"load_source_data\": true}' && dbt run"
