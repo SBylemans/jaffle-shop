@@ -1,0 +1,29 @@
+name: Create and Push Tag on Main
+on:
+  # This workflow will only run on pushes to the main branch.
+  # It will NOT run when a tag is pushed. This is important to avoid infinite loops.
+  push:
+    branches:
+      - main
+jobs:
+  tag-and-release:
+    runs-on: ubuntu-latest
+    # This is a critical step! The workflow needs permission to write content (i.e., push a tag).
+    permissions:
+      contents: write
+    steps:
+      # Step 1: Check out your repository's code.
+      # `fetch-depth: 0` is essential. It fetches the entire git history,
+      # which is required for the tagging action to find the previous version number.
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      # Step 2: Use the action to automatically bump and tag the new version.
+      - name: Bump version and push tag
+        id: tag_version # Give the step an ID to reference its outputs later
+        uses: anothrNick/github-tag-action@1.67.0 # Use a specific version for stability
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions
+          WITH_V: true              # The tag will be created with a 'v' prefix (e.g., v1.2.3)
+          DEFAULT_BUMP: patch       # If no specific commit message is found, bump the patch version
