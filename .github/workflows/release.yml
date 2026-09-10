@@ -1,0 +1,24 @@
+name: Tag Release
+on:
+  push:
+    branches: [sbylemans/test]
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Create next patch tag
+        run: |
+          latest=$(git tag --sort=-v:refname | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | head -1)
+          if [ -z "$latest" ]; then
+            next="0.0.1"
+          else
+            IFS='.' read -r major minor patch <<< "$latest"
+            next="$major.$minor.$((patch+1))"
+          fi
+          git tag "$next"
+          git push origin "$next"
