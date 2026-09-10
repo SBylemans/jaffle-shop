@@ -3,10 +3,11 @@ on:
   push:
     branches: [sbylemans/test]
 jobs:
-  tag:
+  release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      packages: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -20,5 +21,18 @@ jobs:
             IFS='.' read -r major minor patch <<< "$latest"
             next="$major.$minor.$((patch+1))"
           fi
+          echo "version=$next" >> $GITHUB_OUTPUT
           git tag "$next"
           git push origin "$next"
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}:${{ steps.tag.outputs.version }}
+            ghcr.io/${{ github.repository }}:latest
