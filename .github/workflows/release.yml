@@ -13,6 +13,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Create next patch tag
+        id: tag
         run: |
           latest=$(git tag --sort=-v:refname | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | head -1)
           if [ -z "$latest" ]; then
@@ -23,7 +24,6 @@ jobs:
           fi
           echo "version=$next" >> $GITHUB_OUTPUT
           git tag "$next"
-          git push origin "$next"
       - uses: docker/login-action@v3
         with:
           registry: ghcr.io
