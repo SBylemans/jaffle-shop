@@ -1,0 +1,12 @@
+jaffle_shop:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: "{{ env_var('PGHOST', 'postgres') }}"
+      user: "{{ env_var('PGUSER', 'jaffle') }}"
+      password: "{{ env_var('PGPASSWORD', 'jaffle') }}"
+      port: "{{ env_var('PGPORT', '5432') | int }}"
+      dbname: "{{ env_var('PGDATABASE', 'jaffle') }}"
+      schema: public
+      threads: 1
