@@ -1,6 +1,5 @@
 select
-    id,
-    first_name,
-    last_name
+    customer_id,
+    customer_name
 from {{ ref('stg_customers') }}
-where id is not null
+where customer_id is not null
