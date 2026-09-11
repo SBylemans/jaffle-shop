@@ -4,7 +4,7 @@ from datetime import datetime
 
 default_args = {
   'owner': 'data-team',
-  'start_date': 'datetime(2024,1,1),
+  'start_date': datetime(2024, 1, 1),
   'retries': 1
 }
 
